@@ -80,7 +80,7 @@ export default defineComponent({
           <li
             v-for="(ingredient, slot) in slots"
             :key="slot"
-            class="flex items-center justify-between p-8 bg-gray-100 rounded shadow"
+            class="flex items-center justify-between p-8 bg-gray-50 rounded shadow"
           >
             <span class="flex items-center space-x-2">
               <span>{{ slot }}</span>
@@ -91,11 +91,17 @@ export default defineComponent({
               <span>{{ ingredient.item.name }}</span>
               <button
                 @click="removeAssignment(slot, ingredient.item.id)"
-                class="rounded-full w-4 h-4 p-4 border shadow flex items-center justify-center"
+                class="rounded-full w-4 h-4 p-4 border shadow transform hover:scale-105 flex items-center justify-center"
               >&times;</button>
             </span>
 
-            <button class="border py-1 px-4" v-else="ingredient.item" :disabled="!selectedBeverage" @click="assign(slot)">
+            <button
+              :class="[
+                {
+                   'bg-red-500 text-white hover:bg-red-600 transform hover:scale-105': selectedBeverage,
+                   'text-gray-300': !selectedBeverage,
+                }, 'border py-1 px-4 rounded-lg' ]"
+              v-else="ingredient.item" :disabled="!selectedBeverage" @click="assign(slot)">
               Assign
             </button>
           </li>
