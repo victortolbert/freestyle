@@ -1,27 +1,51 @@
-# Vue 3 + Typescript + Vite
+## Frontend Developer coding assessment
 
-This template should help get you started developing with Vue 3 and Typescript in Vite.
+A Freestyle dispenser works similar to an inkjet printer, but instead of ink cartridges a dispenser contains ingredient cartridges. Our larger dispensers can hold up to 36 ingredient cartridges. The cartridges have RFID tags which we use to identify the available ingredients as well as identify which slot the cartridge is in, and therefor which pump to use to pump that ingredient. However, one model of dispenser has a hardware limitation. While we can identify all the ingredients in a shelf, we can’t tell which slot the cartridges are in. For this one model of dispenser there is an extra setup step where the technician needs to assign each of the cartridges to a slot.
 
-## Recommended IDE Setup
+To keep this exercise simple, assume this dispenser has a single shelf that has eight slots labeled S1..S8. Let’s also assume that there is an endpoint that returns the ingredients available in the shelf and that this endpoint returns the following data:
 
-[VSCode](https://code.visualstudio.com/) + [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur). Make sure to enable `vetur.experimental.templateInterpolationService` in settings!
+```json
+[
+    { "id":100, "name": "Coke Part 1" },
+    { "id":101, "name": "Coke Part 2" },
+    { "id":102, "name": "Diet Coke Part 1" },
+    { "id":103, "name": "Diet Coke Part 2" },
+    { "id":104, "name": "Fanta" },
+    { "id":105, "name": "Sprite" },
+    { "id":106, "name": "Powerade" },
+    { "id":107, "name": "Lemon" }
+]
+```
 
-### If Using `<script setup>`
+Furthermore, assume there is an endpoint that can add a mapping of an ingredient to a slot:
 
-[`<script setup>`](https://github.com/vuejs/rfcs/pull/227) is a feature that is currently in RFC stage. To get proper IDE support for the syntax, use [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) instead of Vetur (and disable Vetur).
+```
+POST /api/mappings/${slot}/${ingredientId}
+```
 
-## Type Support For `.vue` Imports in TS
+and another to remove a mapping:
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can use the following:
+```
+DELETE /api/mappings/${slot}
+```
 
-### If Using Volar
+The above calls can be mocked however you like ...Keep it simple.  This is not the focus of this exercise.
 
-Run `Volar: Switch TS Plugin on/off` from VSCode command palette.
+The goal of this exercise is to write a simple ui that shows the unmapped ingredients and allows them to be mapped to an available slot. Assume that initial state on startup is that all slots are unmapped and that the available ingredients are the array list above.
 
-### If Using Vetur
+## UI Requirements
 
-1. Install and add `@vuedx/typescript-plugin-vue` to the [plugins section](https://www.typescriptlang.org/tsconfig#plugins) in `tsconfig.json`
-2. Delete `src/shims-vue.d.ts` as it is no longer needed to provide module info to Typescript
-3. Open `src/main.ts` in VSCode
-4. Open the VSCode command palette
-5. Search and run "Select TypeScript version" -> "Use workspace version"
+- The column on the left displays all ingredients that are not currently assigned to a slot.
+- The column on the right displays the list of slots.
+- The selected ingredient is indicated by a ring around the icon and can be assigned to a slot by selecting the “assign” button for the slot.
+- Once an ingredient is assigned to a slot it is removed from the list.
+- Each slot should contain the name of the slot (S1, S2, etc).
+- If a slot does not have an ingredient assigned, it should show "unassigned".
+- If a slot has an ingredient assigned, it should show the ingredient name.
+- If a slot has an ingredient assigned it should show an “X” button. Clicking the button will remove the assignment. The slot will then appear as unassigned and the ingredient will be return to the ingredient list in the left column.
+
+## Recommended Stack
+
+- ReactJS
+- TypeScript
+- Sass
